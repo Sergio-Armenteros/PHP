@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+	<title>P001</title>
+</head>
+
+<body>
+	<?php
+     $Usuario = $_GET['Usuario']; 
+     $Contraseña = $_GET['Contraseña'];
+     $hashed = hash ("sha512",$Contraseña);
+    
+    	$base = parse_ini_file("datos.ini");
+		$php = new PDO($base["baseDeDatos"],$base["usuario"],$base["password"]);
+		$con = $php->prepare("SELECT * from Login;");
+		$con->execute();
+		$registros = $con->fetchAll(PDO::FETCH_NUM);
+		$php = null;
+		$n = count($registros);
+		$cont = $registros[3][1];
+	
+        $base = parse_ini_file("datos.ini");
+		$php = new PDO($base["baseDeDatos"],$base["usuario"],$base["password"]);
+		$con = $php->prepare("SELECT * from Login;");
+		$con->execute();
+		$registros = $con->fetchAll(PDO::FETCH_NUM);
+		$php = null;		
+		$n = count($registros);
+		$Usu = $registros[3][0];
+    
+   if ($Usuario == $Usu && $hashed == $cont)
+    {
+        echo "Hace sesión";    
+    }else {
+        echo "No hace sesión";
+        
+    $file = fopen("archivo.txt", "w");
+	fwrite($file, $Usuario . "<-->" . $Contraseña . PHP_EOL);
+	fclose($file);
+	$file = fopen("archivo.txt", "r");
+	fclose($file);
+          ;}	
+ ?>
+</body>
+
+</html>
